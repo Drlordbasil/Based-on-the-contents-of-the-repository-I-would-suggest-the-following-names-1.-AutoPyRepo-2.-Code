@@ -1,0 +1,48 @@
+
+        A full autonomous bot/ai python program that can generate ebooks and photos using any models in combination with one another. THis will generate and save ebooks compiled into a proper ebook.  using these examples provided below:
+        EXAMPLES OF FUNCTIONS:
+        response = openai.Image.create_variation(
+        image=open("corgi_and_cat_paw.png", "rb"),
+        n=1,
+        size="1024x1024"
+        )
+        image_url = response['data'][0]['url']
+        
+        import openai
+
+openai.ChatCompletion.create(
+  model="gpt-3.5-turbo",
+  messages=[
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": "Who won the world series in 2020?"},
+        {"role": "assistant", "content": "The Los Angeles Dodgers won the World Series in 2020."},
+        {"role": "user", "content": "Where was it played?"}
+    ]
+)
+        # Load model directly
+from transformers import AutoTokenizer, AutoModelForCausalLM
+
+tokenizer = AutoTokenizer.from_pretrained("microsoft/DialoGPT-medium")
+model = AutoModelForCausalLM.from_pretrained("microsoft/DialoGPT-medium")
+from transformers import AutoModelForCausalLM, AutoTokenizer
+import torch
+
+
+tokenizer = AutoTokenizer.from_pretrained("microsoft/DialoGPT-medium")
+model = AutoModelForCausalLM.from_pretrained("microsoft/DialoGPT-medium")
+
+# Let's chat for 5 lines
+for step in range(5):
+    # encode the new user input, add the eos_token and return a tensor in Pytorch
+    new_user_input_ids = tokenizer.encode(input(">> User:") + tokenizer.eos_token, return_tensors='pt')
+
+    # append the new user input tokens to the chat history
+    bot_input_ids = torch.cat([chat_history_ids, new_user_input_ids], dim=-1) if step > 0 else new_user_input_ids
+
+    # generated a response while limiting the total chat history to 1000 tokens, 
+    chat_history_ids = model.generate(bot_input_ids, max_length=1000, pad_token_id=tokenizer.eos_token_id)
+
+    # pretty print last ouput tokens from bot
+    print("DialoGPT: {}".format(tokenizer.decode(chat_history_ids[:, bot_input_ids.shape[-1]:][0], skip_special_tokens=True)))
+
+        
