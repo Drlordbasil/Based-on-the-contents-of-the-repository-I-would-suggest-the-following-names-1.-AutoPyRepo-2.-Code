@@ -1,0 +1,6 @@
+The package requirements for this Python program are:
+
+1. `openai`
+2. `datetime`
+3. `transformers`
+4. `torch`
