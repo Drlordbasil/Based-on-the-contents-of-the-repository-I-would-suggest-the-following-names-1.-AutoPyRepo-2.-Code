@@ -47,7 +47,8 @@ class ChatBot:
         for step in range(num_lines):
             user_input = input(">> User:")
 
-            new_user_input_ids = self.tokenizer.encode(user_input + self.tokenizer.eos_token, return_tensors='pt')
+            new_user_input_ids = self.tokenizer.encode(
+                user_input + self.tokenizer.eos_token, return_tensors='pt')
             bot_input_ids = torch.cat([self.chat_history_ids, new_user_input_ids],
                                       dim=-1) if step > 0 else new_user_input_ids
 
@@ -67,7 +68,8 @@ class AutonomousProgram:
         self.chat_bot = chat_bot
 
     def run_photo_generation(self, n_variations: int, image_size: str) -> None:
-        image_urls = self.photo_generator.generate_variations(n_variations, image_size)
+        image_urls = self.photo_generator.generate_variations(
+            n_variations, image_size)
         print("Generated variations:")
         for url in image_urls:
             print(url)
@@ -76,11 +78,13 @@ class AutonomousProgram:
         chat_history = [
             {"role": "system", "content": "You are a helpful assistant."},
             {"role": "user", "content": "Who won the world series in 2020?"},
-            {"role": "assistant", "content": "The Los Angeles Dodgers won the World Series in 2020."},
+            {"role": "assistant",
+                "content": "The Los Angeles Dodgers won the World Series in 2020."},
             {"role": "user", "content": "Where was it played?"}
         ]
         ebook_text = self.ebook_generator.generate_ebook(chat_history)
-        timestamp = datetime.now().strftime("%Y%m%d%H%M%S")  # Add timestamp to avoid overwriting previous ebooks
+        # Add timestamp to avoid overwriting previous ebooks
+        timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
         output_file = f"ebook_{timestamp}.txt"
         self.ebook_generator.save_ebook(ebook_text, output_file)
         print(f"Ebook '{output_file}' generated and saved successfully.")
